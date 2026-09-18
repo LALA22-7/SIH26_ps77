@@ -1,0 +1,41 @@
+{
+  "training": {
+    "epochs": 100,
+    "batch_size": 8,
+    "learning_rate": 0.001,
+    "optimizer": "adam",
+    "scheduler": "reduce_lr_on_plateau",
+    "scheduler_patience": 5,
+    "scheduler_factor": 0.5,
+    "early_stopping_patience": 15,
+    "checkpoint_metric": "val_csi_mean",
+    "checkpoint_mode": "max"
+  },
+  "loss": {
+    "type": "multi_task_weighted",
+    "weights": {
+      "thunderstorm": 1.0,
+      "cloudburst": 2.0,
+      "flash_flood": 2.0
+    },
+    "focal_loss_gamma": 2.0,
+    "positive_weight": 10.0
+  },
+  "data": {
+    "train_years": ["2018", "2019", "2020", "2021", "2022", "2023", "2024"],
+    "val_years": ["2025"],
+    "test_years": ["2026"],
+    "include_hard_negatives": true,
+    "augmentation": {
+      "horizontal_flip": true,
+      "random_crop": false,
+      "gaussian_noise_std": 0.01
+    }
+  },
+  "evaluation": {
+    "metrics": ["pod", "far", "csi", "fss", "brier_score"],
+    "lead_times_hours": [1, 2, 3, 4, 5, 6],
+    "probability_thresholds": [0.3, 0.5, 0.7],
+    "fss_neighborhood_sizes": [3, 5, 9, 15]
+  }
+}

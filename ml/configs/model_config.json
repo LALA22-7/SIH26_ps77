@@ -1,0 +1,54 @@
+{
+  "model": {
+    "type": "multi_task_convlstm",
+    "backbone": {
+      "type": "convlstm",
+      "input_channels": 24,
+      "hidden_channels": 64,
+      "num_layers": 2,
+      "kernel_size": 3
+    },
+    "heads": {
+      "thunderstorm": {
+        "type": "conv_head",
+        "output_channels": 1,
+        "activation": "sigmoid"
+      },
+      "cloudburst": {
+        "type": "conv_head",
+        "output_channels": 1,
+        "activation": "sigmoid"
+      },
+      "flash_flood": {
+        "type": "terrain_conditioned_head",
+        "output_channels": 1,
+        "terrain_channels": 3,
+        "activation": "sigmoid"
+      }
+    }
+  },
+  "input": {
+    "sequence_length": 6,
+    "lead_times_hours": [1, 2, 3, 4, 5, 6],
+    "spatial_resolution_km": 4,
+    "grid_size": [128, 128],
+    "channels": {
+      "satellite": {
+        "count": 6,
+        "description": "INSAT-3D/3DR: TIR1, TIR2, MIR, WV, VIS, SWIR"
+      },
+      "atmospheric": {
+        "count": 12,
+        "description": "IWV, dIWV, CAPE, CIN, u_shear, v_shear, convergence, T_850, T_500, RH_850, RH_500, geopotential"
+      },
+      "rainfall": {
+        "count": 3,
+        "description": "QPE_current, QPE_1h_accum, QPE_3h_accum"
+      },
+      "terrain": {
+        "count": 3,
+        "description": "elevation, slope, drainage_density (static, not in sequence)"
+      }
+    }
+  }
+}
